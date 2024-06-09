@@ -6,9 +6,42 @@
 ## 使用示例
 
 ``` ts
-import { createApi, createReqHandler } from 'type-route-api' // demo 未发布 npm
+// 使用演示
+async function test() {
+  // 推导出参数的类型和返回值类型，不用手动指定
 
-// 处理请求
+  // route + param: /user/info?id=1
+  const user1: User = await myApi.user.info.get({ id: 1 })
+  // route + param: /post/info?id=1
+  const post1: Post = await myApi.post.info.get({ id: 1 })
+
+  // route: /post/add
+  const add1: number = await myApi.post.add.post({ postId: 1 })
+  // route：/post/delete
+  const delete1: boolean = await myApi.post.delete.post(1)
+}
+```
+
+``` ts
+// myApi 构建路由 api 结构和类型信息
+const myApi = createApi(myReq, ({ get, post }) => ({
+  user: {
+    info: get<(p: { id: number }) => User>
+  },
+  post: {
+    info: get<(p: { id: number }) => Post>,
+    list: get<() => Post[]>,
+    add: post<(data: Post) => number>,
+    delete: post<(id: number) => boolean>,
+  }
+}))
+
+interface User { userId: number }
+interface Post { postId: number }
+```
+
+``` ts
+// myReq 对象处理请求
 const myReq = createReqHandler({
   get(api, param) {
     const route = api.route // 这里会得到路由信息
@@ -28,36 +61,6 @@ const myReq = createReqHandler({
   },
 })
 
-// 构建路由 api 结构和类型信息
-const myApi = createApi(myReq, ({ get, post }) => ({
-  user: {
-    info: get<(p: { id: number }) => User>
-  },
-  post: {
-    info: get<(p: { id: number }) => Post>,
-    list: get<() => Post[]>,
-    add: post<(data: Post) => number>,
-    delete: post<(id: number) => boolean>,
-  }
-}))
-
-// 使用演示
-async function test() {
-  // 推导出参数的类型和返回值类型，不用手动指定
-
-  // route + param: /user/info?id=1
-  const user1: User = await myApi.user.info.get({ id: 1 })
-  // route + param: /post/info?id=1
-  const post1: Post = await myApi.post.info.get({ id: 1 })
-
-  // route: /post/add
-  const add1: number = await myApi.post.add.post({ postId: 1 })
-  // route：/post/delete
-  const delete1: boolean = await myApi.post.delete.post(1)
-}
-
-interface User { userId: number }
-interface Post { postId: number }
 ```
 
 ## 后继功能添加
