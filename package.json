@@ -1,0 +1,18 @@
+{
+  "name": "type-route-api",
+  "version": "0.1.0",
+  "description": "type-route-api",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest"
+  },
+  "keywords": [
+    "api", "type"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "typescript": "^5.4.5",
+    "vite": "latest",
+    "vitest": "latest"
+  }
+}
